@@ -350,12 +350,12 @@ Beberapa daerah memiliki keterbatasan yang menyebabkan hanya dapat mengakses dom
 - Edit untuk DNS Master `/etc/bind/named.conf.local` nambahin PTR
 
 ```
-
 zone "2.77.10.in-addr.arpa" {
-type master;
-file "/etc/bind/it27/2.77.10.in-addr.arpa";
+        type master;
+        notify yes;
+        also-notify { 10.77.1.2;};
+        file "/etc/bind/it27/2.77.10.in-addr.arpa";
 };
-
 ```
 
 - Copy `cp /etc/bind/db.local /etc/bind/it27/2.77.10.in-addr.arpa`
@@ -367,18 +367,16 @@ file "/etc/bind/it27/2.77.10.in-addr.arpa";
 ;
 ; BIND data file for local loopback interface
 ;
-$TTL 604800
-@ IN SOA pasopati.it27.com. root.pasopati.it27.com. (
-2 ; Serial
-604800 ; Refresh
-86400 ; Retry
-2419200 ; Expire
-604800 ) ; Negative Cache TTL
+$TTL    604800
+@       IN      SOA     pasopaati.it27.com. root.pasopati.it27.com. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
 ;
-2.77.10.in-addr.arpa. IN NS pasopati.it27.com.
-4 IN PTR pasopati.it27.com.
-
-```
+2.77.10.in-addr.arpa.   IN      NS      pasopati.it27.com.
+4                       IN      PTR     pasopati.it27.com.
 
 - Restart `service bind9 restart`
 
@@ -460,10 +458,6 @@ type slave;
 masters {10.77.2.5;};
 file "/var/lib/bind/it27/2.77.10.in-addr.arpa";
 };
-zone "panah.pasopati.it27.com" {
-type master;
-file "/etc/bind/panah/panah.pasopati.it27.com";
-};
 
 ```
 
@@ -491,7 +485,7 @@ Kamu juga diperintahkan untuk membuat subdomain khusus melacak kekuatan tersembu
 ; BIND data file for local loopback interface
 ;
 $TTL 604800
-@ IN SOA 10.77.2.2. root.10.77.2.2. (
+@ IN SOA sudarsana.it27.com. root.sudarsana.it27.com. (
 2 ; Serial
 604800 ; Refresh
 86400 ; Retry
@@ -716,3 +710,4 @@ Karena probset sudah kehabisan ide masuk ke salah satu worker buatkan akses dire
 ## SOAL 20
 
 Worker tersebut harus dapat di akses dengan sekiantterimakasih.xxxx.com dengan alias www.sekiantterimakasih.xxxx.com.
+```
