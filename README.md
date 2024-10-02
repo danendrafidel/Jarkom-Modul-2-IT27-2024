@@ -587,22 +587,21 @@ zone "panah.pasopati.it27.com" {
 - Edit `named.conf.local` untuk nambahin subdomainnya seperti dibawah pada DNS Slave
 
 ```
-
 ;
 ; BIND data file for local loopback interface
 ;
-$TTL 604800
-@ IN SOA panah.pasopati.it27.com. root.panah.pasopati.it27.com. (
-2 ; Serial
-604800 ; Refresh
-86400 ; Retry
-2419200 ; Expire
-604800 ) ; Negative Cache TTL
+$TTL    604800
+@       IN      SOA     panah.pasopati.it27.com. root.panah.pasopati.it27.com. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
 ;
-@ IN NS panah.pasopati.it27.com.
-@ IN A 10.77.2.4
-@ IN AAAA ::1
-www IN CNAME panah.pasopati.it27.com
+@       IN      NS      panah.pasopati.it27.com.
+@       IN      A       10.77.2.4
+@       IN      AAAA    ::1
+www     IN      CNAME   panah.pasopati.it27.com
 
 ```
 
@@ -616,7 +615,7 @@ www IN CNAME panah.pasopati.it27.com
 
 Markas juga meminta catatan kapan saja meme brain rot akan dijatuhkan, maka buatlah subdomain baru di subdomain panah yaitu log.panah.pasopati.xxxx.com serta aliasnya www.log.panah.pasopati.xxxx.com yang juga mengarah ke Kotalingga.
 
-- Masuk kedalam `cd /etc/bind/panah`
+- Masuk kedalam `cd /etc/bind/panah` pada DNS Slave
 - Tambahkan subdomain lognya
 
 ```
