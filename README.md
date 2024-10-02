@@ -646,8 +646,7 @@ $TTL    604800
 @       IN      NS      log.panah.pasopati.it27.com.
 @       IN      A       10.77.2.4
 @       IN      AAAA    ::1
-www    IN      CNAME    log.panah.pasopati.it27.com
-log     IN      A       10.77.2.4
+www     IN      CNAME   log.panah.pasopati.it27.com
 ```
 
 - Restart dengan `service bind9 restart`
