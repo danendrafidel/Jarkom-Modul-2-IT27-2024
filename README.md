@@ -76,6 +76,8 @@ iface  eth0 inet static
   gateway 10.77.1.1
 
 up echo nameserver 192.168.122.1 > /etc/resolv.conf
+up echo nameserver 10.77.2.5 > /etc/resolv.conf
+up echo nameserver 10.77.1.2>> /etc/resolv.conf
 ```
 
 ### GrahamBell (Client)
@@ -90,6 +92,8 @@ iface  eth0 inet static
   gateway 10.77.1.1
 
 up echo nameserver 192.168.122.1 > /etc/resolv.conf
+up echo nameserver 10.77.2.5 > /etc/resolv.conf
+up echo nameserver 10.77.1.2>> /etc/resolv.conf
 ```
 
 ### Samaratungga (Client)
@@ -104,6 +108,8 @@ iface  eth0 inet static
   gateway 10.77.1.1
 
 up echo nameserver 192.168.122.1 > /etc/resolv.conf
+up echo nameserver 10.77.2.5 > /etc/resolv.conf
+up echo nameserver 10.77.1.2>> /etc/resolv.conf
 ```
 
 ### Srikandi (Client)
@@ -118,6 +124,8 @@ iface  eth0 inet static
   gateway 10.77.2.1
 
 up echo nameserver 192.168.122.1 > /etc/resolv.conf
+up echo nameserver 10.77.2.5 > /etc/resolv.conf
+up echo nameserver 10.77.1.2>> /etc/resolv.conf
 ```
 
 ### Kotalingga (Web Server)
@@ -168,50 +176,76 @@ iface  eth0 inet static
 up echo nameserver 192.168.122.1 > /etc/resolv.conf
 ```
 
+- Gunakan `iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE -s 10.77.0.0/16` untuk memulai ping pada seluruh client pada Nusantara
+
 ## SOAL 2
 
 Karena para pasukan membutuhkan koordinasi untuk melancarkan serangannya, maka buatlah sebuah domain yang mengarah ke Solok dengan alamat sudarsana.xxxx.com dengan alias www.sudarsana.xxxx.com, dimana xxxx merupakan kode kelompok. Contoh: sudarsana.it01.com.
+
+- Instal bind pada DNS Master
+
+```
+apt-get update
+apt-get install bind9 -y
+```
+
+- Kemudian `nano /etc/bind/named.conf.local` untuk mengsetup domain `sudarsana.it27.com`
+
+```
+zone "sudarsana.it27.com" {
+        type master;
+        file "/etc/bind/it27/sudarsana.it27.com";
+};
+```
+
+- Buat direktori `/etc/bind/it27` dan cp `cp /etc/bind/db.local /etc/bind/it27/sudarsana.it27.com` untuk mengatur bind9nya
+
+- Kemudian masuk ke `cd /etc/bind/it27`
+
+- Edit confignya `nano sudarsana.it27.com`
+
+```
+- ;
+; BIND data file for local loopback interface
+;
+$TTL    604800
+@       IN      SOA      sudarsana.it27.com. root. sudarsana.it27.com. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      sudarsana.it27.com.
+@       IN      A       10.77.2.2
+@       IN      AAAA    ::1
+www     IN      CNAME   sudarsana.it27.com.
+```
+
+- Restart dengan `service bind9 restart`
+
+- Ping pada client dengan memasukkan `ping www.sudarsana.it27.com`
+
+![2](./img/2.png)
 
 ## SOAL 3
 
 Para pasukan juga perlu mengetahui mana titik yang akan diserang, sehingga dibutuhkan domain lain yaitu pasopati.xxxx.com dengan alias www.pasopati.xxxx.com yang mengarah ke Kotalingga.
 
-## SOAL 4
-
-Markas pusat meminta dibuatnya domain khusus untuk menaruh informasi persenjataan dan suplai yang tersebar. Informasi dan suplai meme terbaru tersebut mengarah ke Tanjungkulai dan domain yang ingin digunakan adalah rujapala.xxxx.com dengan alias www.rujapala.xxxx.com.
-
-## SOAL 5
-
-Pastikan domain-domain tersebut dapat diakses oleh seluruh komputer (client) yang berada di Nusantara.
-
-- Tambahkan nameserver prefix ip `10.77.2.5` pada `etc/resolv.conf`
-
-- coba dengan memasukkan pada client
+- `nano /etc/bind/named.conf.local` untuk mengsetup domain `pasopati.it27.com` pada DNS Master
 
 ```
-ping www.sudarsana.it27.com
-ping www.pasopati.it27.com
-ping.www.rujapala.it27.com
-```
-
-![5](./img/5.png)
-
-## SOAL 6
-
-Beberapa daerah memiliki keterbatasan yang menyebabkan hanya dapat mengakses domain secara langsung melalui alamat IP domain tersebut. Karena daerah tersebut tidak diketahui secara spesifik, pastikan semua komputer (client) dapat mengakses domain pasopati.xxxx.com melalui alamat IP Kotalingga (Notes: menggunakan pointer record).
-
-- Edit untuk DNS Master `/etc/bind/named.conf.local` nambahin PTR
-
-```
-zone "2.77.10.in-addr.arpa" {
-    type master;
-    file "/etc/bind/it27/2.77.10.in-addr.arpa";
+zone "pasopati.it27.com" {
+        type master;
+        file "/etc/bind/it27/pasopati.it27.com";
 };
 ```
 
-- Copy `cp /etc/bind/db.local /etc/bind/it27/2.77.10.in-addr.arpa`
+- cp `cp /etc/bind/db.local /etc/bind/it27/pasopati.it27.com` untuk mengatur bind9nya
 
-- cd ke `/etc/bind/it27` lalu edit `nano 2.77.10.in-addr.arpa` tambhain yang dibawah itu
+- Kemudian masuk ke `cd /etc/bind/it27`
+
+- Edit confignya `nano pasopati.it27.com`
 
 ```
 ;
@@ -225,8 +259,125 @@ $TTL    604800
                         2419200         ; Expire
                          604800 )       ; Negative Cache TTL
 ;
-2.77.10.in-addr.arpa.   IN      NS      pasopati.it27.com.
-4                       IN      PTR     pasopati.it27.com.
+@       IN      NS      pasopati.it27.com.
+@       IN      A       10.77.2.4
+@       IN      AAAA    ::1
+www     IN      CNAME   pasopati.it27.com.
+```
+
+- Restart dengan `service bind9 restart`
+
+- Ping pada client dengan memasukkan `ping www.pasopati.it27.com`
+
+![3](./img/3.png)
+
+## SOAL 4
+
+Markas pusat meminta dibuatnya domain khusus untuk menaruh informasi persenjataan dan suplai yang tersebar. Informasi dan suplai meme terbaru tersebut mengarah ke Tanjungkulai dan domain yang ingin digunakan adalah rujapala.xxxx.com dengan alias www.rujapala.xxxx.com.
+
+- `nano /etc/bind/named.conf.local` untuk mengsetup domain `rujapala.it27.com` pada DNS Master
+
+```
+zone "rujapala.it27.com" {
+        type master;
+        file "/etc/bind/it27/rujapala.it27.com";
+};
+```
+
+- cp `cp /etc/bind/db.local /etc/bind/it27/rujapala.it27.com` untuk mengatur bind9nya
+
+- Kemudian masuk ke `cd /etc/bind/it27`
+
+- Edit confignya `nano rujapala.it27.com`
+
+```
+;
+; BIND data file for local loopback interface
+;
+$TTL    604800
+@       IN      SOA     rujapala.it27.com. root.rujapala.it27.com. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      rujapala.it27.com.
+@       IN      A       10.77.2.6
+@       IN      AAAA    ::1
+www     IN      CNAME   rujapala.it27.com.
+```
+
+- Restart dengan `service bind9 restart`
+
+- Ping pada client dengan memasukkan `ping www.rujapala.it27.com`
+
+![4](./img/4.png)
+
+## SOAL 5
+
+Pastikan domain-domain tersebut dapat diakses oleh seluruh komputer (client) yang berada di Nusantara.
+
+- Tambahkan nameserver prefix ip `10.77.2.5` pada `etc/resolv.conf` pada seluruh client atau disetup pada konfigurasi GNSnya memakai
+
+```
+
+up echo nameserver 10.77.2.5 > /etc/resolv.conf
+up echo nameserver 10.77.1.2>> /etc/resolv.conf
+
+```
+
+`10.77.2.5` untuk prefix ip DNS Master `10.77.1.2` untuk prefix ip DNS Slave
+
+![5](<./img/5%20(1).png>)
+
+- coba dengan memasukkan pada client
+
+```
+
+ping www.sudarsana.it27.com
+ping www.pasopati.it27.com
+ping.www.rujapala.it27.com
+
+```
+
+![5](./img/5.png)
+
+## SOAL 6
+
+Beberapa daerah memiliki keterbatasan yang menyebabkan hanya dapat mengakses domain secara langsung melalui alamat IP domain tersebut. Karena daerah tersebut tidak diketahui secara spesifik, pastikan semua komputer (client) dapat mengakses domain pasopati.xxxx.com melalui alamat IP Kotalingga (Notes: menggunakan pointer record).
+
+- Edit untuk DNS Master `/etc/bind/named.conf.local` nambahin PTR
+
+```
+
+zone "2.77.10.in-addr.arpa" {
+type master;
+file "/etc/bind/it27/2.77.10.in-addr.arpa";
+};
+
+```
+
+- Copy `cp /etc/bind/db.local /etc/bind/it27/2.77.10.in-addr.arpa`
+
+- cd ke `/etc/bind/it27` lalu edit `nano 2.77.10.in-addr.arpa` tambhain yang dibawah itu
+
+```
+
+;
+; BIND data file for local loopback interface
+;
+$TTL 604800
+@ IN SOA pasopati.it27.com. root.pasopati.it27.com. (
+2 ; Serial
+604800 ; Refresh
+86400 ; Retry
+2419200 ; Expire
+604800 ) ; Negative Cache TTL
+;
+2.77.10.in-addr.arpa. IN NS pasopati.it27.com.
+4 IN PTR pasopati.it27.com.
+
 ```
 
 - Restart `service bind9 restart`
@@ -270,6 +421,15 @@ notify yes;
 also-notify { 10.77.1.2;};
 file "/etc/bind/it27/2.77.10.in-addr.arpa";
 };
+
+```
+
+- Pada DNS Slave install bind seperti DNS Master
+
+```
+
+apt-get update
+apt-get install bind9 -y
 
 ```
 
@@ -387,13 +547,15 @@ panah IN NS ns1
 ```
 
 options {
-    directory "/var/cache/bind";
-    //dnssec-validation auto;
-    allow-query{any;};
+directory "/var/cache/bind";
+//dnssec-validation auto;
+allow-query{any;};
 
     auth-nxdomain no;    # conform to RFC1035
     listen-on-v6 { any; };
+
 };
+
 ```
 
 - Kemudian restart service bind9 `service bind9 restart`
