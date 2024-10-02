@@ -138,6 +138,8 @@ iface  eth0 inet static
   gateway 10.77.2.1
 
 up echo nameserver 192.168.122.1 > /etc/resolv.conf
+up echo nameserver 10.77.2.5 > /etc/resolv.conf
+up echo nameserver 10.77.1.2>> /etc/resolv.conf
 ```
 
 ### Tanjungkulai (Web Server)
@@ -150,6 +152,8 @@ iface  eth0 inet static
   gateway 10.77.2.1
 
 up echo nameserver 192.168.122.1 > /etc/resolv.conf
+up echo nameserver 10.77.2.5 > /etc/resolv.conf
+up echo nameserver 10.77.1.2>> /etc/resolv.conf
 ```
 
 ### Bedahulu (Web Server)
@@ -162,6 +166,8 @@ iface  eth0 inet static
   gateway 10.77.2.1
 
 up echo nameserver 192.168.122.1 > /etc/resolv.conf
+up echo nameserver 10.77.2.5 > /etc/resolv.conf
+up echo nameserver 10.77.1.2>> /etc/resolv.conf
 ```
 
 ### Solok (Load Balancer)
