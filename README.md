@@ -196,9 +196,133 @@ Akhir-akhir ini seringkali terjadi serangan brainrot ke DNS Server Utama, sebaga
 
 Kamu juga diperintahkan untuk membuat subdomain khusus melacak kekuatan tersembunyi di Ohio dengan subdomain cakra.sudarsana.xxxx.com yang mengarah ke Bedahulu.
 
+- Setup pada DNS Master `/etc/bind/it27/sudarsana.it27.com`
+
+```
+;
+; BIND data file for local loopback interface
+;
+$TTL    604800
+@       IN      SOA     10.77.2.2. root.10.77.2.2. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      sudarsana.it27.com.
+@       IN      A       10.77.2.2
+@       IN      AAAA    ::1
+www     IN      CNAME   sudarsana.it27.com.
+cakra   IN      A       10.77.2.7
+```
+
+- Restart service bind9 di DNS Master `service bind9 restart`
+
+![8](<./img/8%20(2).png>)
+
+- cek subdomain `cakra.sudarsana.it27.com` di client
+
+  ![8](<./img/8%20(3).png>)
+
 ## SOAL 9
 
 Karena terjadi serangan DDOS oleh shikanoko nokonoko koshitantan (NUN), sehingga sistem komunikasinya terhalang. Untuk melindungi warga, kita diperlukan untuk membuat sistem peringatan dari siren man oleh Frekuensi Freak dan memasukkannya ke subdomain panah.pasopati.xxxx.com dalam folder panah dan pastikan dapat diakses secara mudah dengan menambahkan alias www.panah.pasopati.xxxx.com dan mendelegasikan subdomain tersebut ke Majapahit dengan alamat IP menuju radar di Kotalingga.
+
+- Setup pada DNS Master
+
+```
+;
+; BIND data file for local loopback interface
+;
+$TTL    604800
+@       IN      SOA     pasopati.it27.com. root.pasopati.it27.com. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      pasopati.it27.com.
+@       IN      A       10.77.2.4
+@       IN      AAAA    ::1
+www     IN      CNAME   pasopati.it27.com.
+ns1     IN      A       10.77.1.2
+panah   IN      NS      ns1
+```
+
+- Lalu pada `/etc/bind/named.conf.options`
+
+  ![9](<./img/9%20(1).png>)
+
+- Kemudian restart service bind9 `service bind9 restart`
+
+- Pada DNS Slave edit `/etc/bind/named.conf.options`
+
+![9](<./img/9%20(2).png>)
+
+- Kemudian pada `nano /etc/bind/named.conf.local` tambahkan untuk subdomain `panah.pasopati.it27.com`
+
+```
+zone "sudarsana.it27.com" {
+        type slave;
+        masters {10.77.2.5;};
+        file "/var/lib/bind/it27/sudarsana.it27.com";
+};
+
+zone "pasopati.it27.com" {
+        type slave;
+        masters {10.77.2.5;};
+        file "/var/lib/bind/it27/pasopati.it27.com";
+};
+
+zone "rujapala.it27.com" {
+        type slave;
+        masters {10.77.2.5;};
+        file "/var/lib/bind/it27/rujapala.it27.com";
+};
+zone "2.77.10.in-addr.arpa" {
+        type slave;
+        masters {10.77.2.5;};
+        file "/var/lib/bind/it27/2.77.10.in-addr.arpa";
+};
+zone "panah.pasopati.it27.com" {
+        type master;
+        file "/etc/bind/panah/panah.pasopati.it27.com";
+};
+```
+
+- Buat direktori panah `/etc/bind/panah`
+
+- Lalu cp `cp /etc/bind/db.local /etc/bind/panah/panah.pasopati.it27.com`
+
+![9](<./img/9%20(3).png>)
+
+- Edit `named.conf.local`
+
+```
+;
+; BIND data file for local loopback interface
+;
+$TTL    604800
+@       IN      SOA     panah.pasopati.it27.com. root.panah.pasopati.it27.com. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      panah.pasopati.it27.com.
+@       IN      A       10.77.2.4
+@       IN      AAAA    ::1
+www     IN      CNAME   panah.pasopati.it27.com
+```
+
+- Restart bind9 `service bind9 restart`
+
+- `ping panah.pasopati.it27.com` pada client
+
+![9](<./img/9%20(4).png>)
 
 ## SOAL 10
 
@@ -211,3 +335,7 @@ Setelah pertempuran mereda, warga IT dapat kembali mengakses jaringan luar dan m
 ## SOAL 12
 
 Karena pusat ingin sebuah laman web yang ingin digunakan untuk memantau kondisi kota lainnya maka deploy laman web ini (cek resource yg lb) pada Kotalingga menggunakan apache.
+
+```
+
+```
