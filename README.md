@@ -507,9 +507,9 @@ cakra   IN      A       10.77.2.7
 
 - Restart service bind9 di DNS Master `service bind9 restart`
 
-![8](<./img/8%20(2).png>)
+![8](<img/8.png>)
 
-- cek subdomain `cakra.sudarsana.it27.com` di client
+- Testing subdomain `cakra.sudarsana.it27.com` di client
 
   ![8](<./img/8%20(3).png>)
 
@@ -517,7 +517,7 @@ cakra   IN      A       10.77.2.7
 
 Karena terjadi serangan DDOS oleh shikanoko nokonoko koshitantan (NUN), sehingga sistem komunikasinya terhalang. Untuk melindungi warga, kita diperlukan untuk membuat sistem peringatan dari siren man oleh Frekuensi Freak dan memasukkannya ke subdomain panah.pasopati.xxxx.com dalam folder panah dan pastikan dapat diakses secara mudah dengan menambahkan alias www.panah.pasopati.xxxx.com dan mendelegasikan subdomain tersebut ke Majapahit dengan alamat IP menuju radar di Kotalingga.
 
-- Setup pada DNS Master ` /etc/bind/it27` untuk nambahin subdomain
+- Setup pada DNS Master (Sriwijaya) ` /etc/bind/it27` untuk nambahin subdomain
 
 ```
 ;
@@ -539,7 +539,7 @@ ns1     IN      A       10.77.1.2
 panah   IN      NS      ns1
 ```
 
-- Pada DNS Master masih edit `/etc/bind/named.conf.options`
+- Pada DNS Master (Sriwijaya) edit bagian optionnya `/etc/bind/named.conf.options`
 
 ```
 
@@ -557,7 +557,7 @@ allow-query{any;};
 
 - Kemudian restart service bind9 `service bind9 restart`
 
-- Kemudian pada DNS Slave setup `nano /etc/bind/named.conf.local` tambahkan untuk subdomain `panah.pasopati.it27.com`
+- Kemudian pada DNS Slave (Majapahit) setup `nano /etc/bind/named.conf.local` tambahkan untuk subdomain `panah.pasopati.it27.com`
 
 ```
 
