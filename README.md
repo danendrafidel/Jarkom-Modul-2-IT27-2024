@@ -382,7 +382,7 @@ panah IN NS ns1
 
 ```
 
-- Pada DNS Slave edit `/etc/bind/named.conf.options`
+- Pada DNS Master masih edit `/etc/bind/named.conf.options`
 
 ```
 
@@ -437,7 +437,7 @@ file "/etc/bind/panah/panah.pasopati.it27.com";
 
 ![9](<./img/9%20(3).png>)
 
-- Edit `named.conf.local` untuk nambahin subdomainnya seperti dibawah
+- Edit `named.conf.local` untuk nambahin subdomainnya seperti dibawah pada DNS Slave
 
 ```
 
