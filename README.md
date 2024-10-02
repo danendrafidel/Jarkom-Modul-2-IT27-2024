@@ -377,6 +377,7 @@ $TTL    604800
 ;
 2.77.10.in-addr.arpa.   IN      NS      pasopati.it27.com.
 4                       IN      PTR     pasopati.it27.com.
+```
 
 - Restart `service bind9 restart`
 
@@ -391,74 +392,68 @@ Akhir-akhir ini seringkali terjadi serangan brainrot ke DNS Server Utama, sebaga
 - Pada DNS Master edit `/etc/bind/named.conf.local` untuk `notify` dan `also-notify`
 
 ```
-
 zone "sudarsana.it27.com" {
-type master;
-notify yes;
-also-notify { 10.77.1.2;};
-file "/etc/bind/it27/sudarsana.it27.com";
+    type master;
+    notify yes;
+    also-notify { 10.77.1.2;};
+    file "/etc/bind/it27/sudarsana.it27.com";
 };
 
 zone "pasopati.it27.com" {
-type master;
-notify yes;
-also-notify { 10.77.1.2;};
-file "/etc/bind/it27/pasopati.it27.com";
+    type master;
+    notify yes;
+    also-notify { 10.77.1.2;};
+    file "/etc/bind/it27/pasopati.it27.com";
 };
 
 zone "rujapala.it27.com" {
-type master;
-notify yes;
-also-notify { 10.77.1.2;};
-file "/etc/bind/it27/rujapala.it27.com";
+    type master;
+    notify yes;
+    also-notify { 10.77.1.2;};
+    file "/etc/bind/it27/rujapala.it27.com";
 };
 
 zone "2.77.10.in-addr.arpa" {
-type master;
-notify yes;
-also-notify { 10.77.1.2;};
-file "/etc/bind/it27/2.77.10.in-addr.arpa";
+    type master;
+    notify yes;
+    also-notify { 10.77.1.2;};
+    file "/etc/bind/it27/2.77.10.in-addr.arpa";
 };
-
 ```
 
 - Pada DNS Slave install bind seperti DNS Master
 
 ```
-
 apt-get update
 apt-get install bind9 -y
-
 ```
 
 - Kemudian pada DNS Slave edit `/etc/bind/named.conf.local` untuk type `slave`
 
 ```
-
 zone "sudarsana.it27.com" {
-type slave;
-masters {10.77.2.5;};
-file "/var/lib/bind/it27/sudarsana.it27.com";
+    type slave;
+    masters {10.77.2.5;};
+    file "/var/lib/bind/it27/sudarsana.it27.com";
 };
 
 zone "pasopati.it27.com" {
-type slave;
-masters {10.77.2.5;};
-file "/var/lib/bind/it27/pasopati.it27.com";
+    type slave;
+    masters {10.77.2.5;};
+    file "/var/lib/bind/it27/pasopati.it27.com";
 };
 
 zone "rujapala.it27.com" {
-type slave;
-masters {10.77.2.5;};
-file "/var/lib/bind/it27/rujapala.it27.com";
+    type slave;
+    masters {10.77.2.5;};
+    file "/var/lib/bind/it27/rujapala.it27.com";
 };
 
 zone "2.77.10.in-addr.arpa" {
-type slave;
-masters {10.77.2.5;};
-file "/var/lib/bind/it27/2.77.10.in-addr.arpa";
+    type slave;
+    masters {10.77.2.5;};
+    file "/var/lib/bind/it27/2.77.10.in-addr.arpa";
 };
-
 ```
 
 - Pada DNS Master `service bind9 stop`
@@ -480,24 +475,22 @@ Kamu juga diperintahkan untuk membuat subdomain khusus melacak kekuatan tersembu
 - Setup pada DNS Master `/etc/bind/it27/sudarsana.it27.com`
 
 ```
-
 ;
 ; BIND data file for local loopback interface
 ;
-$TTL 604800
-@ IN SOA sudarsana.it27.com. root.sudarsana.it27.com. (
-2 ; Serial
-604800 ; Refresh
-86400 ; Retry
-2419200 ; Expire
-604800 ) ; Negative Cache TTL
+$TTL    604800
+@       IN      SOA     sudarsana.it27.com. root.sudarsana.it27.com. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
 ;
-@ IN NS sudarsana.it27.com.
-@ IN A 10.77.2.2
-@ IN AAAA ::1
-www IN CNAME sudarsana.it27.com.
-cakra IN A 10.77.2.7
-
+@       IN      NS      sudarsana.it27.com.
+@       IN      A       10.77.2.2
+@       IN      AAAA    ::1
+www     IN      CNAME   sudarsana.it27.com.
+cakra   IN      A       10.77.2.7
 ```
 
 - Restart service bind9 di DNS Master `service bind9 restart`
@@ -515,25 +508,23 @@ Karena terjadi serangan DDOS oleh shikanoko nokonoko koshitantan (NUN), sehingga
 - Setup pada DNS Master ` /etc/bind/it27` untuk nambahin subdomain
 
 ```
-
 ;
 ; BIND data file for local loopback interface
 ;
-$TTL 604800
-@ IN SOA pasopati.it27.com. root.pasopati.it27.com. (
-2 ; Serial
-604800 ; Refresh
-86400 ; Retry
-2419200 ; Expire
-604800 ) ; Negative Cache TTL
+$TTL    604800
+@       IN      SOA     pasopati.it27.com. root.pasopati.it27.com. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
 ;
-@ IN NS pasopati.it27.com.
-@ IN A 10.77.2.4
-@ IN AAAA ::1
-www IN CNAME pasopati.it27.com.
-ns1 IN A 10.77.1.2
-panah IN NS ns1
-
+@       IN      NS      pasopati.it27.com.
+@       IN      A       10.77.2.4
+@       IN      AAAA    ::1
+www     IN      CNAME   pasopati.it27.com.
+ns1     IN      A       10.77.1.2
+panah   IN      NS      ns1
 ```
 
 - Pada DNS Master masih edit `/etc/bind/named.conf.options`
@@ -559,30 +550,30 @@ allow-query{any;};
 ```
 
 zone "sudarsana.it27.com" {
-type slave;
-masters {10.77.2.5;};
-file "/var/lib/bind/it27/sudarsana.it27.com";
+    type slave;
+    masters {10.77.2.5;};
+    file "/var/lib/bind/it27/sudarsana.it27.com";
 };
 
 zone "pasopati.it27.com" {
-type slave;
-masters {10.77.2.5;};
-file "/var/lib/bind/it27/pasopati.it27.com";
+    type slave;
+    masters {10.77.2.5;};
+    file "/var/lib/bind/it27/pasopati.it27.com";
 };
 
 zone "rujapala.it27.com" {
-type slave;
-masters {10.77.2.5;};
-file "/var/lib/bind/it27/rujapala.it27.com";
+    type slave;
+    masters {10.77.2.5;};
+    file "/var/lib/bind/it27/rujapala.it27.com";
 };
 zone "2.77.10.in-addr.arpa" {
-type slave;
-masters {10.77.2.5;};
-file "/var/lib/bind/it27/2.77.10.in-addr.arpa";
+    type slave;
+    masters {10.77.2.5;};
+    file "/var/lib/bind/it27/2.77.10.in-addr.arpa";
 };
 zone "panah.pasopati.it27.com" {
-type master;
-file "/etc/bind/panah/panah.pasopati.it27.com";
+    type master;
+    file "/etc/bind/panah/panah.pasopati.it27.com";
 };
 
 ```
@@ -629,25 +620,23 @@ Markas juga meminta catatan kapan saja meme brain rot akan dijatuhkan, maka buat
 - Tambahkan subdomain lognya
 
 ```
-
 ;
 ; BIND data file for local loopback interface
 ;
 $TTL    604800
-@       IN      SOA     panah.pasopati.it27.com. root.panah.pasopati.it$
-2 ; Serial
-604800 ; Refresh
-86400 ; Retry
-2419200 ; Expire
-604800 ) ; Negative Cache TTL
+@       IN      SOA     panah.pasopati.it27.com. root.panah.pasopati.it27.com. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
 ;
-@ IN NS panah.pasopati.it27.com.
-@ IN A 10.77.2.4
-@ IN AAAA ::1
-www IN CNAME panah.pasopati.it27.com
-log IN A 10.77.2.4
-www.log IN CNAME panah.pasopati.it27.com
-
+@       IN      NS      panah.pasopati.it27.com.
+@       IN      A       10.77.2.4
+@       IN      AAAA    ::1
+www     IN      CNAME   panah.pasopati.it27.com
+log     IN      A       10.77.2.4
+www.log IN      CNAME   panah.pasopati.it27.com
 ```
 
 - Restart dengan `service bind9 restart`
@@ -710,4 +699,3 @@ Karena probset sudah kehabisan ide masuk ke salah satu worker buatkan akses dire
 ## SOAL 20
 
 Worker tersebut harus dapat di akses dengan sekiantterimakasih.xxxx.com dengan alias www.sekiantterimakasih.xxxx.com.
-```
