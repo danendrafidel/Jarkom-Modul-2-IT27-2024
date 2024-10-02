@@ -228,9 +228,11 @@ $TTL    604800
 www     IN      CNAME   sudarsana.it27.com.
 ```
 
+- Jalankan file confignya `./sudarsana.it27.com`
+
 - Restart dengan `service bind9 restart`
 
-- Ping pada client dengan memasukkan `ping www.sudarsana.it27.com`
+- Ping pada client dengan memasukkan `ping www.sudarsana.it27.com` atau `ping sudarsana.it27.com`
 
 ![2](./img/2.png)
 
@@ -270,6 +272,8 @@ $TTL    604800
 @       IN      AAAA    ::1
 www     IN      CNAME   pasopati.it27.com.
 ```
+
+- Jalankan file confignya `./pasopati.it27.com`
 
 - Restart dengan `service bind9 restart`
 
@@ -314,6 +318,8 @@ $TTL    604800
 www     IN      CNAME   rujapala.it27.com.
 ```
 
+- Jalankan file confignya `./rujapala.it27.com`
+
 - Restart dengan `service bind9 restart`
 
 - Ping pada client dengan memasukkan `ping www.rujapala.it27.com`
@@ -337,7 +343,7 @@ up echo nameserver 10.77.1.2>> /etc/resolv.conf
 
 ![5](<./img/5%20(1).png>)
 
-- coba dengan memasukkan pada client
+- Testing pada client untuk mengeceknya
 
 ```
 
@@ -366,7 +372,7 @@ zone "2.77.10.in-addr.arpa" {
 
 - Copy `cp /etc/bind/db.local /etc/bind/it27/2.77.10.in-addr.arpa`
 
-- cd ke `/etc/bind/it27` lalu edit `nano 2.77.10.in-addr.arpa` tambhain yang dibawah itu
+- cd ke `/etc/bind/it27` lalu edit `nano 2.77.10.in-addr.arpa` tambahin yang dibawah itu
 
 ```
 
@@ -387,7 +393,7 @@ $TTL    604800
 
 - Restart `service bind9 restart`
 
-- Coba di client dengan `host -t PTR 10.77.2.4`
+- Testing pada client dengan `host -t PTR 10.77.2.4`
 
 ![6](./img/6.png)
 
@@ -395,7 +401,7 @@ $TTL    604800
 
 Akhir-akhir ini seringkali terjadi serangan brainrot ke DNS Server Utama, sebagai tindakan antisipasi kamu diperintahkan untuk membuat DNS Slave di Majapahit untuk semua domain yang sudah dibuat sebelumnya yang mengarah ke Sriwijaya.
 
-- Pada DNS Master edit `/etc/bind/named.conf.local` untuk `notify` dan `also-notify`
+- Pada DNS Master (Sriwijaya) edit `/etc/bind/named.conf.local` untuk `notify` dan `also-notify`
 
 ```
 zone "sudarsana.it27.com" {
@@ -427,14 +433,14 @@ zone "2.77.10.in-addr.arpa" {
 };
 ```
 
-- Pada DNS Slave install bind seperti DNS Master
+- Pada DNS Slave (Majapahit) install bind seperti DNS Master (Sriwijaya)
 
 ```
 apt-get update
 apt-get install bind9 -y
 ```
 
-- Kemudian pada DNS Slave edit `/etc/bind/named.conf.local` untuk type `slave`
+- Kemudian pada DNS Slave (Majapahit) edit `/etc/bind/named.conf.local` untuk type `slave`
 
 ```
 zone "sudarsana.it27.com" {
@@ -462,11 +468,11 @@ zone "2.77.10.in-addr.arpa" {
 };
 ```
 
-- Pada DNS Master `service bind9 stop`
+- Matikan bind9 pada DNS Master (Sriwijaya) `service bind9 stop` dan cek status bind9 `service bind9 status`
 
-![7](<./img/7%20(1).png>)
+![7](<img/7.png>)
 
-- Kemudian pada DNS Slave `service bind9 restart`
+- Kemudian nyalakan bind9 pada DNS Slave (Majapahit) `service bind9 restart`
 
 ![7](<./img/7%20(2).png>)
 
