@@ -75,9 +75,10 @@ iface  eth0 inet static
   netmask 255.255.255.0
   gateway 10.77.1.1
 
-up echo nameserver 192.168.122.1 > /etc/resolv.conf
-up echo nameserver 10.77.2.5 > /etc/resolv.conf
-up echo nameserver 10.77.1.2>> /etc/resolv.conf
+up echo nameserver 10.77.1.2 > /etc/resolv.conf
+up echo nameserver 10.77.2.5 >> /etc/resolv.conf
+up echo nameserver 192.168.122.1 >>  /etc/resolv.conf
+
 ```
 
 ### GrahamBell (Client)
@@ -91,9 +92,10 @@ iface  eth0 inet static
   netmask 255.255.255.0
   gateway 10.77.1.1
 
-up echo nameserver 192.168.122.1 > /etc/resolv.conf
-up echo nameserver 10.77.2.5 > /etc/resolv.conf
-up echo nameserver 10.77.1.2>> /etc/resolv.conf
+up echo nameserver 10.77.1.2 > /etc/resolv.conf
+up echo nameserver 10.77.2.5 >> /etc/resolv.conf
+up echo nameserver 192.168.122.1 >>  /etc/resolv.conf
+
 ```
 
 ### Samaratungga (Client)
@@ -107,9 +109,10 @@ iface  eth0 inet static
   netmask 255.255.255.0
   gateway 10.77.1.1
 
-up echo nameserver 192.168.122.1 > /etc/resolv.conf
-up echo nameserver 10.77.2.5 > /etc/resolv.conf
-up echo nameserver 10.77.1.2>> /etc/resolv.conf
+up echo nameserver 10.77.1.2 > /etc/resolv.conf
+up echo nameserver 10.77.2.5 >> /etc/resolv.conf
+up echo nameserver 192.168.122.1 >>  /etc/resolv.conf
+
 ```
 
 ### Srikandi (Client)
@@ -123,9 +126,10 @@ iface  eth0 inet static
   netmask 255.255.255.0
   gateway 10.77.2.1
 
-up echo nameserver 192.168.122.1 > /etc/resolv.conf
-up echo nameserver 10.77.2.5 > /etc/resolv.conf
-up echo nameserver 10.77.1.2>> /etc/resolv.conf
+up echo nameserver 10.77.1.2 > /etc/resolv.conf
+up echo nameserver 10.77.2.5 >> /etc/resolv.conf
+up echo nameserver 192.168.122.1 >>  /etc/resolv.conf
+
 ```
 
 ### Kotalingga (Web Server)
@@ -137,9 +141,10 @@ iface  eth0 inet static
   netmask 255.255.255.0
   gateway 10.77.2.1
 
-up echo nameserver 192.168.122.1 > /etc/resolv.conf
-up echo nameserver 10.77.2.5 > /etc/resolv.conf
-up echo nameserver 10.77.1.2>> /etc/resolv.conf
+up echo nameserver 10.77.1.2 > /etc/resolv.conf
+up echo nameserver 10.77.2.5 >> /etc/resolv.conf
+up echo nameserver 192.168.122.1 >>  /etc/resolv.conf
+
 ```
 
 ### Tanjungkulai (Web Server)
@@ -151,9 +156,10 @@ iface  eth0 inet static
   netmask 255.255.255.0
   gateway 10.77.2.1
 
-up echo nameserver 192.168.122.1 > /etc/resolv.conf
-up echo nameserver 10.77.2.5 > /etc/resolv.conf
-up echo nameserver 10.77.1.2>> /etc/resolv.conf
+up echo nameserver 10.77.1.2 > /etc/resolv.conf
+up echo nameserver 10.77.2.5 >> /etc/resolv.conf
+up echo nameserver 192.168.122.1 >>  /etc/resolv.conf
+
 ```
 
 ### Bedahulu (Web Server)
@@ -165,9 +171,10 @@ iface  eth0 inet static
   netmask 255.255.255.0
   gateway 10.77.2.1
 
-up echo nameserver 192.168.122.1 > /etc/resolv.conf
-up echo nameserver 10.77.2.5 > /etc/resolv.conf
-up echo nameserver 10.77.1.2>> /etc/resolv.conf
+up echo nameserver 10.77.1.2 > /etc/resolv.conf
+up echo nameserver 10.77.2.5 >> /etc/resolv.conf
+up echo nameserver 192.168.122.1 >>  /etc/resolv.conf
+
 ```
 
 ### Solok (Load Balancer)
