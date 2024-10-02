@@ -470,7 +470,7 @@ zone "2.77.10.in-addr.arpa" {
 
 - Matikan bind9 pada DNS Master (Sriwijaya) `service bind9 stop` dan cek status bind9 `service bind9 status`
 
-![7](<img/7.png>)
+![7](img/7.png)
 
 - Kemudian nyalakan bind9 pada DNS Slave (Majapahit) `service bind9 restart`
 
@@ -507,7 +507,7 @@ cakra   IN      A       10.77.2.7
 
 - Restart service bind9 di DNS Master `service bind9 restart`
 
-![8](<img/8.png>)
+![8](img/8.png)
 
 - Testing subdomain `cakra.sudarsana.it27.com` di client
 
@@ -628,6 +628,7 @@ www     IN      CNAME   panah.pasopati.it27.com
 Markas juga meminta catatan kapan saja meme brain rot akan dijatuhkan, maka buatlah subdomain baru di subdomain panah yaitu log.panah.pasopati.xxxx.com serta aliasnya www.log.panah.pasopati.xxxx.com yang juga mengarah ke Kotalingga.
 
 - Masuk kedalam `cd /etc/bind/panah` pada DNS Slave
+- cp panah.pasopati.it27.com log.panah.pasopati.it27.com
 - Tambahkan subdomain lognya
 
 ```
@@ -635,19 +636,18 @@ Markas juga meminta catatan kapan saja meme brain rot akan dijatuhkan, maka buat
 ; BIND data file for local loopback interface
 ;
 $TTL    604800
-@       IN      SOA     panah.pasopati.it27.com. root.panah.pasopati.it27.com. (
+@       IN      SOA     log.panah.pasopati.it27.com. root.log.panah.pasopati.it27.com. (
                               2         ; Serial
                          604800         ; Refresh
                           86400         ; Retry
                         2419200         ; Expire
                          604800 )       ; Negative Cache TTL
 ;
-@       IN      NS      panah.pasopati.it27.com.
+@       IN      NS      log.panah.pasopati.it27.com.
 @       IN      A       10.77.2.4
 @       IN      AAAA    ::1
-www     IN      CNAME   panah.pasopati.it27.com
+www    IN      CNAME    log.panah.pasopati.it27.com
 log     IN      A       10.77.2.4
-www.log IN      CNAME   panah.pasopati.it27.com
 ```
 
 - Restart dengan `service bind9 restart`
