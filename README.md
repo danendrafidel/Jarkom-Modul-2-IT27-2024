@@ -634,8 +634,8 @@ www     IN      CNAME   panah.pasopati.it27.com
 
 Markas juga meminta catatan kapan saja meme brain rot akan dijatuhkan, maka buatlah subdomain baru di subdomain panah yaitu log.panah.pasopati.xxxx.com serta aliasnya www.log.panah.pasopati.xxxx.com yang juga mengarah ke Kotalingga.
 
-- Masuk kedalam `cd /etc/bind/panah` pada DNS Slave
-- copy `cp /etc/bind/db.local /etc/bind/panah/log.panah.pasopati.it27.com`
+- Masuk kedalam `cd /etc/bind/panah/panah.pasopati.it27.com` pada DNS Slave
+
 - Tambahkan subdomain lognya
 
 ```
@@ -643,7 +643,7 @@ Markas juga meminta catatan kapan saja meme brain rot akan dijatuhkan, maka buat
 ; BIND data file for local loopback interface
 ;
 $TTL    604800
-@       IN      SOA     log.panah.pasopati.it27.com. root.log.panah.pasopati.it27.com. (
+@       IN      SOA     panah.pasopati.it27.com. root.panah.pasopati.it27.com. (
                               2         ; Serial
                          604800         ; Refresh
                           86400         ; Retry
@@ -653,7 +653,9 @@ $TTL    604800
 @       IN      NS      log.panah.pasopati.it27.com.
 @       IN      A       10.77.2.4
 @       IN      AAAA    ::1
-www     IN      CNAME   log.panah.pasopati.it27.com
+www     IN      CNAME   panah.pasopati.it27.com
+log     IN      A       10.67.2.4
+www.log IN      CNAME   panah.pasopati.it07.com.
 ```
 
 - Restart dengan `service bind9 restart`
