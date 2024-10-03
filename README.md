@@ -668,7 +668,7 @@ www.log IN      CNAME   panah.pasopati.it07.com.
 
 Setelah pertempuran mereda, warga IT dapat kembali mengakses jaringan luar dan menikmati meme brainrot terbaru, tetapi hanya warga Majapahit saja yang dapat mengakses jaringan luar secara langsung. Buatlah konfigurasi agar warga IT yang berada diluar Majapahit dapat mengakses jaringan luar melalui DNS Server Majapahit.
 
-- Edit `/etc/bind/named.conf.options`
+- Edit `/etc/bind/named.conf.options` pada DNS Master
 
 ![11](<./img/11%20(1).png>)
 
