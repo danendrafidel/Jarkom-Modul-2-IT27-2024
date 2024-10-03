@@ -635,7 +635,7 @@ www     IN      CNAME   panah.pasopati.it27.com
 Markas juga meminta catatan kapan saja meme brain rot akan dijatuhkan, maka buatlah subdomain baru di subdomain panah yaitu log.panah.pasopati.xxxx.com serta aliasnya www.log.panah.pasopati.xxxx.com yang juga mengarah ke Kotalingga.
 
 - Masuk kedalam `cd /etc/bind/panah` pada DNS Slave
-- cp panah.pasopati.it27.com log.panah.pasopati.it27.com
+- copy `cp /etc/bind/db.local /etc/bind/panah/log.panah.pasopati.it27.com`
 - Tambahkan subdomain lognya
 
 ```
