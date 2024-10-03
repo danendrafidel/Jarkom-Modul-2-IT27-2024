@@ -672,6 +672,22 @@ Setelah pertempuran mereda, warga IT dapat kembali mengakses jaringan luar dan m
 
 ![11](<./img/11%20(1).png>)
 
+```
+options {
+    directory "/var/cache/bind";
+
+    forwarders {
+        192.168.122.1;
+    }
+
+    //dnssec-validation auto;
+    allow-query{any;};
+
+    auth-nxdomain no;    # conform to RFC1035
+    listen-on-v6 { any; };
+};
+```
+
 - Restart `service bind9 restart`
 - Ping pada client `ping google.com`
 
