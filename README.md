@@ -412,28 +412,28 @@ Akhir-akhir ini seringkali terjadi serangan brainrot ke DNS Server Utama, sebaga
 
 ```
 zone "sudarsana.it27.com" {
-    type masters;
+    type master;
     notify yes;
     also-notify { 10.77.1.2;};
     file "/etc/bind/it27/sudarsana.it27.com";
 };
 
 zone "pasopati.it27.com" {
-    type masters;
+    type master;
     notify yes;
     also-notify { 10.77.1.2;};
     file "/etc/bind/it27/pasopati.it27.com";
 };
 
 zone "rujapala.it27.com" {
-    type masters;
+    type master;
     notify yes;
     also-notify { 10.77.1.2;};
     file "/etc/bind/it27/rujapala.it27.com";
 };
 
 zone "2.77.10.in-addr.arpa" {
-    type masters;
+    type master;
     notify yes;
     also-notify { 10.77.1.2;};
     file "/etc/bind/it27/2.77.10.in-addr.arpa";
@@ -483,7 +483,7 @@ zone "2.77.10.in-addr.arpa" {
 
 ![7](<./img/7%20(2).png>)
 
-- Ping pada client misal `ping www.sudarsana.it27.com` untuk membuktikan DNS Slave berjalan
+- Ping pada client misal `ping sudarsana.it27.com` untuk membuktikan DNS Slave berjalan
 
 ![7](<./img/7%20(3).png>)
 
