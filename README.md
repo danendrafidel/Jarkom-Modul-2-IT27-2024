@@ -681,6 +681,28 @@ Setelah pertempuran mereda, warga IT dapat kembali mengakses jaringan luar dan m
 
 Karena pusat ingin sebuah laman web yang ingin digunakan untuk memantau kondisi kota lainnya maka deploy laman web ini (cek resource yg lb) pada Kotalingga menggunakan apache.
 
+- Install apache pada WebServer Kotalingga
+
+```
+apt-get update
+apt-get install apache2 libapache2-mod-php7.0 php wget unzip -y
+```
+
+- Copy untuk `cp /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/pasopati.it27.com.conf`. Lalu nano kedalam `pasopati.it27.com.conf`
+
+- Perbaiki config Virtualnya dengan cd ke path diatas
+
+```
+<VirtualHost *:80>
+    ServerAdmin webmaster@localhost
+    DocumentRoot /var/www/pasopati.it27.com
+    ServerName pasopati.it27.com
+    ServerAlias www.pasopati.it27.com
+</VirtualHost>
+```
+
+-
+
 ## SOAL 13
 
 Karena Sriwijaya dan Majapahit memenangkan pertempuran ini dan memiliki banyak uang dari hasil penjarahan (sebanyak 35 juta, belum dipotong pajak) maka pusat meminta kita memasang load balancer untuk membagikan uangnya pada web nya, dengan Kotalingga, Bedahulu, Tanjungkulai sebagai worker dan Solok sebagai Load Balancer menggunakan apache sebagai web server nya dan load balancer nya.
