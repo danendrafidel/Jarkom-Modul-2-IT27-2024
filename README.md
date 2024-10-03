@@ -681,27 +681,111 @@ Setelah pertempuran mereda, warga IT dapat kembali mengakses jaringan luar dan m
 
 Karena pusat ingin sebuah laman web yang ingin digunakan untuk memantau kondisi kota lainnya maka deploy laman web ini (cek resource yg lb) pada Kotalingga menggunakan apache.
 
-- Install apache pada WebServer Kotalingga
+- Tambahkan IP Kotalingga di DNS Master dan DNS Slave
+- Buat file config di tipa client nya
+```
+#!/bin/bash
+# Cek apakah lynx sudah terinstal
+if ! command -v named &> /dev/null
+then
+    echo "Lynx belum terinstal, melakukan instalasi..."
+    # Melakukan instalasi lynx
+    apt-get update
+    apt-get install lynx -y
+else
+    echo "lynx sudah terinstal."
+fi
 
 ```
-apt-get update
-apt-get install apache2 libapache2-mod-php7.0 php wget unzip -y
-```
 
-- Copy untuk `cp /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/pasopati.it27.com.conf`. Lalu nano kedalam `pasopati.it27.com.conf`
-
-- Perbaiki config Virtualnya dengan cd ke path diatas
+- Buat file config pada WebServer Kotalingga
 
 ```
-<VirtualHost *:80>
-    ServerAdmin webmaster@localhost
-    DocumentRoot /var/www/pasopati.it27.com
-    ServerName pasopati.it27.com
-    ServerAlias www.pasopati.it27.com
-</VirtualHost>
+#!/bin/bash
+# Cek apakah apache2 sudah terinstal
+if ! command -v apache2 &> /dev/null
+then
+    echo "Apache2 belum terinstal, melakukan instalasi..."
+    # Melakukan instalasi apache2
+    apt-get update
+    apt-get install apache2 -y
+    apt-get install libapache2-mod-php -y
+else
+    echo "Apache2 sudah terinstal."
+fi
+
+# Cek apakah unzip sudah terinstal
+if ! command -v unzip &> /dev/null
+then
+    echo "Unzip belum terinstal, melakukan instalasi..."
+    # Melakukan instalasi unzip
+    apt-get update
+    apt-get install unzip -y
+else
+    echo "Unzip sudah terinstal."
+fi
+
+# Cek apakah PHP sudah terinstal
+if ! command -v php &> /dev/null
+then
+    echo "PHP belum terinstal, melakukan instalasi..."
+    # Melakukan instalasi php
+    apt-get update
+    apt-get install php -y
+else
+    echo "PHP sudah terinstal."
+fi
+
+# Download file lb.zip
+echo "Mengunduh lb.zip..."
+curl -L -o lb.zip --insecure "https://drive.google.com/uc?export=download&id=1xn03kTB27K872cokqwEIlk8Zb121HnfB"
+
+# Cek apakah unduhan berhasil
+if [ ! -f lb.zip ]; then
+    echo "Download gagal atau file tidak ada."
+    exit 1
+fi
+
+# Unzip file lb.zip
+echo "Mengekstrak lb.zip..."
+unzip lb.zip || { echo "Ekstraksi gagal"; exit 1; }
+
+# Hapus file template
+echo "Menghapus file template..."
+rm -rf /var/www/html/index.php
+
+# Copy file index.php
+if [ -d "worker" ] && [ -f "worker/index.php" ]; then
+    echo "Menyalin file index.php..."
+    cp worker/index.php /var/www/html/index.php
+else
+    echo "File 'worker/index.php' tidak ditemukan. Pastikan file ada setelah ekstraksi."
+    exit 1
+fi
+
+# Restart layanan Apache
+echo "Merestart layanan Apache..."
+service apache2 restart
+
+# Tambahkan ServerName ke konfigurasi Apache untuk menghindari peringatan
+if ! grep -q "ServerName localhost" /etc/apache2/apache2.conf; then
+    echo "Menambahkan ServerName ke konfigurasi Apache..."
+    echo "ServerName localhost" >> /etc/apache2/apache2.conf
+fi
+
+echo "Skrip selesai dijalankan."
 ```
 
--
+- Jalankan semua file confignya (Client dan Kotalingga)
+
+  ![Screenshot 2024-10-03 221900](https://github.com/user-attachments/assets/c142b079-d741-488e-9216-e3ea54c2b4ee)
+
+- Jalankan testing di tiap client
+  
+  ```
+  lynx http://10.77.2.4/index.php 
+  ```
+  ![Screenshot 2024-10-03 153251](https://github.com/user-attachments/assets/04f8b090-98ed-447e-ba2d-de40a489392c)
 
 ## SOAL 13
 
