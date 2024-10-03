@@ -218,7 +218,7 @@ zone "sudarsana.it27.com" {
 - Edit confignya `nano sudarsana.it27.com`
 
 ```
-- ;
+;
 ; BIND data file for local loopback interface
 ;
 $TTL    604800
@@ -683,6 +683,7 @@ Karena pusat ingin sebuah laman web yang ingin digunakan untuk memantau kondisi 
 
 - Tambahkan IP Kotalingga di DNS Master dan DNS Slave
 - Buat file config di tipa client nya
+
 ```
 #!/bin/bash
 # Cek apakah lynx sudah terinstal
@@ -781,10 +782,11 @@ echo "Skrip selesai dijalankan."
   ![Screenshot 2024-10-03 221900](https://github.com/user-attachments/assets/c142b079-d741-488e-9216-e3ea54c2b4ee)
 
 - Jalankan testing di tiap client
-  
+
   ```
-  lynx http://10.77.2.4/index.php 
+  lynx http://10.77.2.4/index.php
   ```
+
   ![Screenshot 2024-10-03 153251](https://github.com/user-attachments/assets/04f8b090-98ed-447e-ba2d-de40a489392c)
 
 ## SOAL 13
