@@ -387,7 +387,7 @@ zone "2.77.10.in-addr.arpa" {
 ; BIND data file for local loopback interface
 ;
 $TTL    604800
-@       IN      SOA     pasopaati.it27.com. root.pasopati.it27.com. (
+@       IN      SOA     pasopati.it27.com. root.pasopati.it27.com. (
                               2         ; Serial
                          604800         ; Refresh
                           86400         ; Retry
