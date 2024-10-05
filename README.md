@@ -809,6 +809,85 @@ echo "Skrip selesai dijalankan."
 
 Karena Sriwijaya dan Majapahit memenangkan pertempuran ini dan memiliki banyak uang dari hasil penjarahan (sebanyak 35 juta, belum dipotong pajak) maka pusat meminta kita memasang load balancer untuk membagikan uangnya pada web nya, dengan Kotalingga, Bedahulu, Tanjungkulai sebagai worker dan Solok sebagai Load Balancer menggunakan apache sebagai web server nya dan load balancer nya.
 
+- Sebelum itu siapkan pada ketiga web server
+
+```
+apt install lynx unzip apache2 libapache2-mod-wsgi python-dev libapache2-mod-php7.0 -y
+```
+
+- Kemudian `/var/www/html/index.php` lalu masukkan untuk ketiga webserver
+
+```
+<?php
+$hostname = gethostname();
+$date = date('Y-m-d H:i:s');
+$php_version = phpversion();
+$username = get_current_user();
+
+
+
+echo "Hello World!<br>";
+echo "Saya adalah: $username<br>";
+echo "Saat ini berada di: $hostname<br>";
+echo "Versi PHP yang saya gunakan: $php_version<br>";
+echo "Tanggal saat ini: $date<br>";
+?>
+```
+
+- Lalu `rm /var/www/html/index.html` pada semua webserver
+
+- start apache `service apache2 start` kesemua web server
+
+- `lynx localhost` ke ke-3 web server
+
+- Kemudian masuk Ke LB Solok dan install
+
+```
+apt install lynx apache2 apache2-utils php7.0 php7.0-fpm -y
+```
+
+- Lalu command
+
+```
+a2enmod proxy proxy_balancer proxy_http lbmethod_byrequests lbmethod_bytraffic lbmethod_bybusyness rewrite
+```
+
+- Masuk ke `cd /etc/apache2/sites-available`
+
+- Lalu `nano 000-default.conf` tambahkan proxy balancernya untuk masing" web server
+
+```
+<VirtualHost *:80>
+
+        ServerAdmin webmaster@localhost
+        DocumentRoot /var/www/html
+
+        <Proxy "balancer://workers">
+                BalancerMember http://10.77.2.4
+                BalancerMember http://10.77.2.6
+                BalancerMember http://10.77.2.7
+        ProxySet lbmethod=byrequests
+        </Proxy>
+
+        ProxyPass "/" "balancer://workers"
+        ProxyPassReverse "/" "balancer://workers"
+
+        ErrorLog ${APACHE_LOG_DIR}/error.log
+        CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+</VirtualHost>
+```
+
+- Lalu `service apache2 start`
+
+- `lynx localhost` pada lb solok untuk mengecek lb nya apakah berhasil
+
+![alt text](<img/13 (1).png>)
+
+![alt text](<img/13 (2).png>)
+
+![alt text](<img/13 (3).png>)
+
 ## SOAL 14
 
 Selama melakukan penjarahan mereka melihat bagaimana web server luar negeri, hal ini membuat mereka iri, dengki, sirik dan ingin flexing sehingga meminta agar web server dan load balancer nya diubah menjadi nginx.
@@ -823,9 +902,64 @@ Markas pusat meminta laporan hasil benchmark dengan menggunakan apache benchmark
 - Analisis
 - Meme terbaik kalian (terserah ( ͡° ͜ʖ ͡°)) 🤓
 
+PENGERJAAN :
+
+- Masuk ke Solok
+
+- Benchmark load balancer apache2 dengan algoritma defaultnya (byrequests) `ab -n 100 -c 10 http://127.0.0.1/`
+
+![alt text](<img/13 (3).png>)
+
+- Ganti Algoritmanya `cd /etc/apache2/ sites-available` kemudian `nano 000-default.con` Pada `ProxySet` gunakan `bytraffic`
+
+![alt text](<img/15 (2).png>)
+
+- Lalu `service apache2 restart`
+
+- Test lagi ke `ab -n 100 -c 10 http://127.0.0.1/`
+
+![alt text](<img/15 (3).png>)
+
+- Lalu ganti lagi ke `nano 000-default.conf` `ProxySet` pake `bybusyness`
+
+- Test pake `ab -n 100 -c 10 http://127.0.0.1/`
+
+![alt text](<img/15 (4).png>)
+
+- Sampai Sini
+
 ## SOAL 16
 
 Karena dirasa kurang aman dari brainrot karena masih memakai IP, markas ingin akses ke Solok memakai solok.xxxx.com dengan alias www.solok.xxxx.com (sesuai web server terbaik hasil analisis kalian).
+
+- Masuk ke console Sriwijaya lalu `cd /etc/bind/it27`
+
+- edit `nano named.conf.local' untuk menambahkan zone baru
+
+![alt text](<img/16 (8).png>)
+
+- Kemudian `cd it27` lalu `cp sudarsana.it27.com solok.it27.com` dan ganti nama domainnya
+
+![alt text](<img/16 (9).png>)
+
+- Kemudian `service bind9 restart`
+
+- Pindah ke Solok `cd /etc/apache2/sites-available` dan `cp 000-default.conf solok.it27.com.conf`
+
+- `nano solok.it27.com.conf` ganti ServerName dan Aliasnya
+
+![alt text](<img/16 (10).png>)
+
+- Kemudian mundur dan `cd ..` lalu `nano apache2.conf` tambahkan `ServerName solok.it27.com` kemudian `service apache2 restart`
+
+- Masuk ke client, cek `cat /etc/resolv.conf` dan jangan lupa untuk `apt install lynx` untuk mengetes lb nya pada client dengan `lynx solok.it27.com
+  ![alt text](<img/16 (13).png>)
+
+![alt text](<img/16 (11).png>)
+
+![alt text](<img/16 (1).png>)
+
+![alt text](<img/16 (12).png>)
 
 ## SOAL 17
 
