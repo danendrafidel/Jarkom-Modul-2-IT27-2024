@@ -902,7 +902,7 @@ Markas pusat meminta laporan hasil benchmark dengan menggunakan apache benchmark
 - Analisis
 - Meme terbaik kalian (terserah ( ͡° ͜ʖ ͡°)) 🤓
 
-PENGERJAAN :
+### PENGERJAAN :
 
 - Masuk ke Solok
 
@@ -965,9 +965,49 @@ Karena dirasa kurang aman dari brainrot karena masih memakai IP, markas ingin ak
 
 Agar aman, buatlah konfigurasi agar solok.xxx.com hanya dapat diakses melalui port sebesar π x 10^4 = (phi nya desimal) dan 2000 + 2000 log 10 (10) +700 - π = ?.
 
+- Ke WebServer Solok kemudian, dari perhitungan tesebut didapatkan `4696` untuk portnya kemudian edit `nano /etc/apache2/ports.conf` tambahkan `listen 4696`
+
+![alt text](img/17.png)
+
+- Kemudian pada `nano /etc/apache2/sites-avaible/solok.it27.com.conf` ganti ke `VirtualHost *=4696`
+
+![alt text](<img/17 (2).png>)
+
+- Kemudian restart `service apache2 restart` pada Solok
+
+- Coba pada client `lynx solok.it27.com:4696` maka loadbalancer akan jalan
+
+![alt text](<img/17 (2).png>)
+
 ## SOAL 18
 
 Apa bila ada yang mencoba mengakses IP solok akan secara otomatis dialihkan ke www.solok.xxxx.com.
+
+- Masuk ke Solok `cd /etc/apache2/sites-available`
+
+- Buat `redirect.conf` isikan
+
+```
+<VirtualHost *:80>
+        ErrorLog ${APACHE_LOG_DIR}/error.log
+        CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+        RewriteEngine On
+        RewriteRule ^(.*)$ http://solok.it27.com:4696/$1 [R=301,L]
+</VirtualHost>
+
+# vim: syntax=apache ts=4 sw=4 sts=4 sr noet
+```
+
+- `a2enmod rewrite`
+- `a2dissite 000-default.conf`
+- `service apache2 reload
+- `service apache2 restart`
+- Test ke client `lynx 10.77.2.2
+
+![alt text](<img/18 (2).png>)
+
+![alt text](<img/18 (3).png>)
 
 ## SOAL 19
 
@@ -976,3 +1016,78 @@ Karena probset sudah kehabisan ide masuk ke salah satu worker buatkan akses dire
 ## SOAL 20
 
 Worker tersebut harus dapat di akses dengan sekiantterimakasih.xxxx.com dengan alias www.sekiantterimakasih.xxxx.com.
+
+### PENGERJAAN SOAL 19 DAN 20
+
+- Masuk ke web server bebas (Kotalingga)`cd /etc/apache2/sites-available`
+
+- `nano sekiantterimakasih.it27.com.conf` dan isinya
+
+```
+<VirtualHost *:80>
+
+        ServerName sekiantterimakasih.it27.com
+        ServerAlias www.sekiantterimakasih.it27.com
+        ServerAdmin webmaster@localhost
+        DocumentRoot /var/www/sekiantterimakasih.it27.com
+
+        <Directory "/var/www/sekiantterimakasih.it27.com/worker2">
+                Options +Indexes
+        </Directory>
+
+        ErrorLog ${APACHE_LOG_DIR}/error.log
+        CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+</VirtualHost>
+
+# vim: syntax=apache ts=4 sw=4 sts=4 sr noet
+```
+
+- `service apache2 reload`
+- `a2ensite sekiantterimakasih.it27.com`
+- Lalu `cd /var/www/` dan download
+
+```
+curl -L -o dirlist.zip --insecure "https://drive.google.com/uc?export=download&id=1JGk8b-tZgzAOnDqTx5B3F9qN6AyNs7Zy"
+```
+
+- `apt install unzip && unzip dirlist.zip` untuk unzip
+
+- `mkdir sekiantterimakasih.it27.com` buat direktorinya
+
+- Masuk ke `cd dir-listing`
+
+- Kemudian `mv worker2 ../sekiantterimakasih.it27.com`
+
+- Masuk ke DNS Master Sriwijaya `cd /etc/bind/ && nano named.conf.local` dan tambahkan untuk zone barunya
+
+```
+zone "sekiantterimakasih.it27.com" {
+        type master;
+        notify yes;
+        also-notify {10.72.2.5;};
+        file "/etc/bind/it27/sekiantterimakasih.it27.com";
+};
+```
+
+- `nano sekiantterimakasih.it27.com`
+
+```
+; BIND data file for local loopback interface
+;
+$TTL    604800
+@       IN      SOA     sekiantterimakasih.it27.com. root.solok.it27.co$                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      sekiantterimakasih.it27.com.
+@       IN      A       10.77.2.4 ; IP DARI BEDAHULU
+@       IN      AAAA    ::1
+www     IN      CNAME   sekiantterimakasih.it27.com.
+```
+
+- test lynx di client terserah `lynx sekiantterimakasih.it27.com/worker2`
+
+![alt text](img/20.png)
