@@ -805,6 +805,8 @@ echo "Skrip selesai dijalankan."
 
   ![Screenshot 2024-10-03 153251](https://github.com/user-attachments/assets/04f8b090-98ed-447e-ba2d-de40a489392c)
 
+# REVISI
+
 ## SOAL 13
 
 Karena Sriwijaya dan Majapahit memenangkan pertempuran ini dan memiliki banyak uang dari hasil penjarahan (sebanyak 35 juta, belum dipotong pajak) maka pusat meminta kita memasang load balancer untuk membagikan uangnya pada web nya, dengan Kotalingga, Bedahulu, Tanjungkulai sebagai worker dan Solok sebagai Load Balancer menggunakan apache sebagai web server nya dan load balancer nya.
@@ -892,6 +894,92 @@ a2enmod proxy proxy_balancer proxy_http lbmethod_byrequests lbmethod_bytraffic l
 
 Selama melakukan penjarahan mereka melihat bagaimana web server luar negeri, hal ini membuat mereka iri, dengki, sirik dan ingin flexing sehingga meminta agar web server dan load balancer nya diubah menjadi nginx.
 
+- Abis no 15 tadi lanjutin ke sini
+- Masuk Solok trus run 1 1
+
+```
+service apache2 stop
+apt install nginx -y
+cd /etc/nginx/sites-available
+unlink /etc/nginx/sites-enabled/default
+```
+
+- `nano load-balancer` isi dengan
+
+```
+upstream workers {
+        server 10.77.2.4;
+        server 10.77.2.6;
+        server 10.77.2.7;
+}
+
+server {
+        listen 80;
+        server_name 10.77.2.2;
+
+        location / {
+        proxy_pass http://workers;
+        }
+}
+```
+
+- `ln -s /etc/nginx/sites-available/load-balancer /etc/nginx/sites-enabled/`
+
+- `service nginx start` start
+
+- Masuk ke web server dari Tanjungkulai, Bedahulu, Kotalingga
+
+```
+apt install nginx php7.0 php7.0-fpm -y
+cd /etc/nginx/sites-available
+```
+
+- `nano web` isi
+
+```
+server {
+  listen 80;
+
+  root /var/www/html;
+
+  index index.php index.html index.htm;
+
+  server_name _;
+
+  location / {
+    try_files $uri $uri/ /index.php?$query_string;
+  }
+
+  location ~ \.php$ {
+    include snippets/fastcgi-php.conf;
+    fastcgi_pass unix:/var/run/php/php7.0-fpm.sock;
+  }
+
+  location ~ /\.ht {
+    deny all;
+  }
+
+  error_log /var/log/nginx/web_error.log;
+  access_log /var/log/nginx/web_access.log;
+
+
+}
+```
+
+- `unlink /etc/nginx/sites-enabled/default`
+
+- `ln -s /etc/nginx/sites-available/web /etc/nginx/sites-enabled/`
+
+- atur apache dan nginx
+
+```
+service apache2 stop
+service nginx start
+service php7.0-fpm start
+```
+
+- Kembali ke nomer 15 buat lanjutin benchmark test yang nginx setelah benchmark test apache
+
 ## SOAL 15
 
 Markas pusat meminta laporan hasil benchmark dengan menggunakan apache benchmark dari load balancer dengan 2 web server yang berbeda tersebut dan meminta secara detail dengan ketentuan:
@@ -926,7 +1014,18 @@ Markas pusat meminta laporan hasil benchmark dengan menggunakan apache benchmark
 
 ![alt text](<img/15 (4).png>)
 
-- Sampai Sini
+- Save hasil benchmark apache2
+
+- Ganti service LBnya ke nginx seperti di nomer 14 buat test benchmarknya (LANJUTAN NO 14)
+
+- Masuk Solok buat test benchmark nginx sama kayak apache
+
+- Benchmark `ab -n 100 -c 10 http://127.0.0.1/` terus simpan
+- `nano /etc/nginx/sites-available/web` tambah `least_common;` untuk cek metode ke-2 nginx
+
+- benchmark kembali `ab -n 100 -c 10 http://127.0.0.1/` simpan hasil benchmark untuk nginxnya
+
+![alt text](img/14.png)
 
 ## SOAL 16
 
@@ -988,15 +1087,18 @@ Apa bila ada yang mencoba mengakses IP solok akan secara otomatis dialihkan ke w
 - Buat `redirect.conf` isikan
 
 ```
-<VirtualHost *:80>
-        ErrorLog ${APACHE_LOG_DIR}/error.log
-        CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+<VirtualHost \*:80>
+ErrorLog ${APACHE_LOG_DIR}/error.log
+CustomLog ${APACHE_LOG_DIR}/access.log combined
 
         RewriteEngine On
         RewriteRule ^(.*)$ http://solok.it27.com:4696/$1 [R=301,L]
+
 </VirtualHost>
 
 # vim: syntax=apache ts=4 sw=4 sts=4 sr noet
+
 ```
 
 - `a2enmod rewrite`
@@ -1024,7 +1126,8 @@ Worker tersebut harus dapat di akses dengan sekiantterimakasih.xxxx.com dengan a
 - `nano sekiantterimakasih.it27.com.conf` dan isinya
 
 ```
-<VirtualHost *:80>
+
+<VirtualHost \*:80>
 
         ServerName sekiantterimakasih.it27.com
         ServerAlias www.sekiantterimakasih.it27.com
@@ -1041,6 +1144,7 @@ Worker tersebut harus dapat di akses dengan sekiantterimakasih.xxxx.com dengan a
 </VirtualHost>
 
 # vim: syntax=apache ts=4 sw=4 sts=4 sr noet
+
 ```
 
 - `service apache2 reload`
@@ -1048,7 +1152,9 @@ Worker tersebut harus dapat di akses dengan sekiantterimakasih.xxxx.com dengan a
 - Lalu `cd /var/www/` dan download
 
 ```
+
 curl -L -o dirlist.zip --insecure "https://drive.google.com/uc?export=download&id=1JGk8b-tZgzAOnDqTx5B3F9qN6AyNs7Zy"
+
 ```
 
 - `apt install unzip && unzip dirlist.zip` untuk unzip
@@ -1062,32 +1168,40 @@ curl -L -o dirlist.zip --insecure "https://drive.google.com/uc?export=download&i
 - Masuk ke DNS Master Sriwijaya `cd /etc/bind/ && nano named.conf.local` dan tambahkan untuk zone barunya
 
 ```
+
 zone "sekiantterimakasih.it27.com" {
-        type master;
-        notify yes;
-        also-notify {10.72.2.5;};
-        file "/etc/bind/it27/sekiantterimakasih.it27.com";
+type master;
+notify yes;
+also-notify {10.72.2.5;};
+file "/etc/bind/it27/sekiantterimakasih.it27.com";
 };
+
 ```
 
 - `nano sekiantterimakasih.it27.com`
 
 ```
+
 ; BIND data file for local loopback interface
 ;
 $TTL    604800
-@       IN      SOA     sekiantterimakasih.it27.com. root.solok.it27.co$                              2         ; Serial
-                         604800         ; Refresh
-                          86400         ; Retry
-                        2419200         ; Expire
-                         604800 )       ; Negative Cache TTL
+@       IN      SOA     sekiantterimakasih.it27.com. root.solok.it27.co$ 2 ; Serial
+604800 ; Refresh
+86400 ; Retry
+2419200 ; Expire
+604800 ) ; Negative Cache TTL
 ;
-@       IN      NS      sekiantterimakasih.it27.com.
-@       IN      A       10.77.2.4 ; IP DARI BEDAHULU
-@       IN      AAAA    ::1
-www     IN      CNAME   sekiantterimakasih.it27.com.
+@ IN NS sekiantterimakasih.it27.com.
+@ IN A 10.77.2.4 ; IP DARI BEDAHULU
+@ IN AAAA ::1
+www IN CNAME sekiantterimakasih.it27.com.
+
 ```
 
 - test lynx di client terserah `lynx sekiantterimakasih.it27.com/worker2`
 
 ![alt text](img/20.png)
+
+```
+
+```
