@@ -1200,3 +1200,7 @@ www IN CNAME sekiantterimakasih.it27.com.
 - test lynx di client terserah `lynx sekiantterimakasih.it27.com/worker2`
 
 ![alt text](img/20.png)
+
+## Video Revisi
+
+[Revisi](https://drive.google.com/drive/folders/1yLp5y1k2oyij4aa6HY_-qdQ0NMlQ-PGV?usp=sharing)
