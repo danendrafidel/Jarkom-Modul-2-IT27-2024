@@ -1103,7 +1103,7 @@ CustomLog ${APACHE_LOG_DIR}/access.log combined
 
 - `a2enmod rewrite`
 - `a2dissite 000-default.conf`
-- `service apache2 reload
+- `service apache2 reload`
 - `service apache2 restart`
 - Test ke client `lynx 10.77.2.2`
 
@@ -1201,7 +1201,3 @@ www IN CNAME sekiantterimakasih.it27.com.
 - test lynx di client terserah `lynx sekiantterimakasih.it27.com/worker2`
 
 ![alt text](img/20.png)
-
-```
-
-```
