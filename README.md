@@ -1033,7 +1033,7 @@ Karena dirasa kurang aman dari brainrot karena masih memakai IP, markas ingin ak
 
 - Masuk ke console Sriwijaya lalu `cd /etc/bind/it27`
 
-- edit `nano named.conf.local' untuk menambahkan zone baru
+- edit `nano named.conf.local` untuk menambahkan zone baru
 
 ![alt text](<img/16 (8).png>)
 
@@ -1075,8 +1075,7 @@ Agar aman, buatlah konfigurasi agar solok.xxx.com hanya dapat diakses melalui po
 - Kemudian restart `service apache2 restart` pada Solok
 
 - Coba pada client `lynx solok.it27.com:4696` maka loadbalancer akan jalan
-
-![alt text](<img/17 (2).png>)
+  ![alt text](<img/17 (3).png>)
 
 ## SOAL 18
 
