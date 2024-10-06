@@ -1051,7 +1051,7 @@ Karena dirasa kurang aman dari brainrot karena masih memakai IP, markas ingin ak
 
 - Kemudian mundur dan `cd ..` lalu `nano apache2.conf` tambahkan `ServerName solok.it27.com` kemudian `service apache2 restart`
 
-- Masuk ke client, cek `cat /etc/resolv.conf` dan jangan lupa untuk `apt install lynx` untuk mengetes lb nya pada client dengan `lynx solok.it27.com
+- Masuk ke client, cek `cat /etc/resolv.conf` dan jangan lupa untuk `apt install lynx` untuk mengetes lb nya pada client dengan `lynx solok.it27.com`
   ![alt text](<img/16 (13).png>)
 
 ![alt text](<img/16 (11).png>)
@@ -1105,7 +1105,7 @@ CustomLog ${APACHE_LOG_DIR}/access.log combined
 - `a2dissite 000-default.conf`
 - `service apache2 reload
 - `service apache2 restart`
-- Test ke client `lynx 10.77.2.2
+- Test ke client `lynx 10.77.2.2`
 
 ![alt text](<img/18 (2).png>)
 
